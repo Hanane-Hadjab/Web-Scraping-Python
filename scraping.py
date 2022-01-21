@@ -8,6 +8,8 @@ links = []
 
 for i in range(5):
 
+    # Calculer le temps d'execution
+
     url = 'http://example.python-scraping.com/places/default/index/' + str(i)
 
     response = requests.get(url)
@@ -35,22 +37,25 @@ for i in range(5):
 
 print(len(links))
 
-# avec le with le fichier sera fermé automatiquement a la fin d'ecriture ou lecture 
+# avec le with le fichier sera fermé automatiquement a la fin d'ecriture ou lecture
 with open('urls.txt', 'w') as file:
     for link in links:
-        file.write(link + '\n') 
+        file.write(link + '\n')
 
-# Lire le fichier crée 
+# Lire le fichier crée
 with open('urls.txt', 'r') as file:
-        with open('pays.csv', 'w') as filePays:
-            filePays.write('pays,population\n') # entete de fichier csv
-            for row in file:
-                urlPays = row.strip()
-                res = requests.get(urlPays)
+    with open('pays.csv', 'w') as filePays:
+        filePays.write('pays,population\n')  # entete de fichier csv
+        for row in file:
+            urlPays = row.strip()
+            res = requests.get(urlPays)
 
-                if (res.ok):
-                    soupPays = BeautifulSoup(res.text, 'lxml')
-                    country = soupPays.find('tr', {'id': 'places_country_or_district__row'}).find('td', {'class': 'w2p_fw'})
-                    population = soupPays.find('tr', {'id': 'places_area__row'}).find('td', {'class': 'w2p_fw'})
-                    print('Pays: ' + country.text + ' avec population: '+ population.text)
-                    filePays.write(country.text + ',' + population.text.replace(',', '') + '\n')
+            if (res.ok):
+                soupPays = BeautifulSoup(res.text, 'lxml')
+                country = soupPays.find('tr', {'id': 'places_country_or_district__row'}).find(
+                    'td', {'class': 'w2p_fw'})
+                population = soupPays.find('tr', {'id': 'places_area__row'}).find(
+                    'td', {'class': 'w2p_fw'})
+                print('Pays: ' + country.text +
+                      ' avec population: ' + population.text)
+                filePays.write(country.text + ';' + population.text + '\n')
