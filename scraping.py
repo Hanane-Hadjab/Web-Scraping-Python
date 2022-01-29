@@ -4,13 +4,11 @@ from bs4 import BeautifulSoup
 
 import time
 
-start_time = time.time()
-
 # le site contient 25 page  => 246 pays
 
 links = []
 
-for i in range(5):
+for i in range(1):
 
     # Calculer le temps d'execution
 
@@ -19,15 +17,10 @@ for i in range(5):
     response = requests.get(url)
 
     if response.ok:
-        print(response)  # code de retour d'exécution de la requete
-        print(response.headers)  # Les headers de l'objet reponse
         print(response.text)  # le contenu de la réponse en code HTML de la page
 
         # Objet  soup va contenir la reponse HTML pour qu'on puisse le traiter
         soup = BeautifulSoup(response.text, 'lxml')
-        # si on veut par exemple de récuperer le titre
-        title = soup.find('title')
-        print(title.text)
 
         # Recuperer les liens de toute la page pour les visiter
         tds = soup.findAll('td')
@@ -49,23 +42,31 @@ with open('urls.txt', 'w') as file:
 # Lire le fichier crée
 with open('urls.txt', 'r') as file:
     with open('pays.csv', 'w') as filePays:
-        filePays.write('pays,population\n')  # entete de fichier csv
+        # entete de fichier csv
+        filePays.write('Area,Tld,Population,Capital,Country\n')
         for row in file:
             urlPays = row.strip()
             res = requests.get(urlPays)
 
             if (res.ok):
                 soupPays = BeautifulSoup(res.text, 'lxml')
+
+                area = soupPays.find('tr', {'id': 'places_area__row'}).find(
+                    'td', {'class': 'w2p_fw'})
+
+                tld = soupPays.find('tr', {'id': 'places_tld__row'}).find(
+                    'td', {'class': 'w2p_fw'})
+
+                population = soupPays.find('tr', {'id': 'places_population__row'}).find(
+                    'td', {'class': 'w2p_fw'})
+
+                capital = soupPays.find('tr', {'id': 'places_capital__row'}).find(
+                    'td', {'class': 'w2p_fw'})
+
                 country = soupPays.find('tr', {'id': 'places_country_or_district__row'}).find(
                     'td', {'class': 'w2p_fw'})
-                population = soupPays.find('tr', {'id': 'places_area__row'}).find(
-                    'td', {'class': 'w2p_fw'})
-                print('Pays: ' + country.text +
-                      ' avec population: ' + population.text)
-                filePays.write(country.text + ';' + population.text + '\n')
 
-
-print("\n")
-
-print("Le temps d'éxecution du programme est: %s seconds" %
-      (time.time() - start_time))
+                print('Area: ' + area.text + ' TLD: ' + tld.text + ' Country: ' + country.text + ' Capital: ' + capital.text + ';' +
+                      ' Population: ' + population.text)
+                filePays.write(area.text + ';' + tld.text + ';' + population.text + ';' + capital.text + ';' +
+                               country.text + '\n')
