@@ -2,6 +2,10 @@ import requests
 from bs4 import BeautifulSoup
 
 
+import time
+
+start_time = time.time()
+
 # le site contient 25 page  => 246 pays
 
 links = []
@@ -59,3 +63,9 @@ with open('urls.txt', 'r') as file:
                 print('Pays: ' + country.text +
                       ' avec population: ' + population.text)
                 filePays.write(country.text + ';' + population.text + '\n')
+
+
+print("\n")
+
+print("Le temps d'éxecution du programme est: %s seconds" %
+      (time.time() - start_time))

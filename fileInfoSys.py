@@ -5,6 +5,8 @@ import stat
 import sys
 import time
 
+start_time = time.time()
+
 if sys.version_info >= (3, 0):
     raw_input = input
 
@@ -31,9 +33,12 @@ file_info_keys = ('file name', 'file size', 'last modified', 'last accessed',
                   'creation time', 'Total number of lines are',
                   'Total number of characters are')
 file_info_vales = (file_name, str(file_stats[stat.ST_SIZE]) + " bytes",
-                   time.strftime("%d/%m/%Y %I:%M:%S %p",time.localtime(file_stats[stat.ST_MTIME])),
-                   time.strftime("%d/%m/%Y %I:%M:%S %p",time.localtime(file_stats[stat.ST_ATIME])),
-                   time.strftime("%d/%m/%Y %I:%M:%S %p",time.localtime(file_stats[stat.ST_CTIME])),
+                   time.strftime("%d/%m/%Y %I:%M:%S %p",
+                                 time.localtime(file_stats[stat.ST_MTIME])),
+                   time.strftime("%d/%m/%Y %I:%M:%S %p",
+                                 time.localtime(file_stats[stat.ST_ATIME])),
+                   time.strftime("%d/%m/%Y %I:%M:%S %p",
+                                 time.localtime(file_stats[stat.ST_CTIME])),
                    count, t_char)
 
 for f_key, f_value in zip(file_info_keys, file_info_vales):
@@ -43,7 +48,6 @@ for f_key, f_value in zip(file_info_keys, file_info_vales):
 if stat.S_ISDIR(file_stats[stat.ST_MODE]):
     print("This a directory.")
 else:
-    file_stats_fmt = ''
     print("\nThis is not a directory.")
     stats_keys = ("st_mode", "st_ino (inode number)",
                   "st_dev (device)", "st_nlink (number of hard links)",
@@ -54,3 +58,8 @@ else:
                   "st_ctime (time of creation Windows)")
     for s_key, s_value in zip(stats_keys, file_stats):
         print(s_key, ' =', s_value)
+
+print("\n")
+
+print("Le temps d'éxecution du programme est: %s seconds" %
+      (time.time() - start_time))

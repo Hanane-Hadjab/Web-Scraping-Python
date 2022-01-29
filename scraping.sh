@@ -1,4 +1,5 @@
 #!/bin/bash
+debut=$(date +%s)
 echo "Démarrage ...................."
 base_url="http://example.python-scraping.com/"
 for i in {0..25}; do
@@ -13,3 +14,6 @@ for i in {0..25}; do
   done
 done
 echo "FIN"
+fin=$(date +%s)
+duree=$(( $fin - $debut ))
+echo "$duree secondes"
